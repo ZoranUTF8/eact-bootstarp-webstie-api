@@ -1,0 +1,267 @@
+openapi: 3.0.0
+info:
+  title: react-bootstrap-api
+  contact:
+    name: janjic zoran
+    url: https://zoran-janjic.netlify.app/
+    email: janjiczoran23@gmail.com
+  version: '1.0'
+servers:
+- url: https://react-bootstrap-website-api.herokuapp.com/api/v1
+  variables: {}
+paths:
+  /auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login
+      operationId: Login
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/LoginRequest'
+              - example:
+                  email: yourEmail@gmail.com
+                  password: yourPassword
+            example:
+              email: yourEmail@gmail.com
+              password: yourPassword
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Register user
+      operationId: Registeruser
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/RegisteruserRequest'
+              - example:
+                  name: Firstname Lastname
+                  email: yourEmail@gmail.com
+                  password: password
+            example:
+              name: First Name
+              email: yourEmail@gmail.com
+              password: password
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /employees:
+    post:
+      tags:
+      - Employee
+      summary: Create new employee
+      operationId: Createnewemployee
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/CreatenewemployeeRequest'
+              - {}
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    get:
+      tags:
+      - Employee
+      summary: Get all employees
+      operationId: Getallemployees
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+  /employees/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The employee ID
+    get:
+      tags:
+      - Employee
+      summary: Get single employee
+      operationId: Getsingleemployee
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    patch:
+      tags:
+      - Employee
+      summary: Update an employee
+      operationId: Updateanemployee
+      parameters: []
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+              - $ref: '#/components/schemas/UpdateanemployeeRequest'
+              - example:
+                  firstName: Firstname
+                  lastName: Lastname
+            example:
+              firstName: Firstname
+              lastName: Lastname
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+    delete:
+      tags:
+      - Employee
+      summary: Delete an employee
+      operationId: Deleteanemployee
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+      - bearer: []
+components:
+  schemas:
+    LoginRequest:
+      title: LoginRequest
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: yourEmail@gmail.com
+        password: password
+    RegisteruserRequest:
+      title: RegisteruserRequest
+      required:
+      - name
+      - email
+      - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: Firstname Lastname
+        email: yourEmail@gmail.com
+        password: password
+    CreatenewemployeeRequest:
+      title: CreatenewemployeeRequest
+      required:
+      - firstName
+      - lastName
+      - age
+      - salary
+      - address
+      - position
+      - department
+      - education
+      - status
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        age:
+          type: integer
+          format: int32
+        salary:
+          type: integer
+          format: int32
+        address:
+          type: string
+        position:
+          type: string
+        department:
+          type: string
+        education:
+          type: string
+        status:
+          type: string
+      example:
+        firstName: John
+        lastName: Doe
+        age: 33
+        salary: 2000
+        address: Frankfurt
+        position: Software Developer
+        department: Engineering
+        education: BA
+        status: employed
+    UpdateanemployeeRequest:
+      title: UpdateanemployeeRequest
+      required:
+      - firstName
+      - lastName
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+      example:
+        firstName: Firstname
+        lastName: Lastname
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+- name: Auth
+  description: ''
+- name: Employee
+  description: ''
