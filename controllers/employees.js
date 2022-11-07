@@ -1,5 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError } = require("../errors/index");
+const moment = require("moment");
 const EmployeeModel = require("../models/Employee");
 
 const getEmployees = async (req, res) => {
@@ -85,8 +86,8 @@ const deleteEmployee = async (req, res) => {
 };
 
 const showStats = async (req, res) => {
-  // Stage 1: Filter employee documents by AGE
   let employeesStats = await EmployeeModel.aggregate([
+    // Stage 1: Get all employees added by all admins
     {
       $match: {},
     },
@@ -97,10 +98,6 @@ const showStats = async (req, res) => {
         total: { $sum: 1 },
       },
     },
-    // Stage 3: Sort documents by age in descending order
-    // {
-    //   $sort: { dateToString: 1 },
-    // },
   ]);
 
   // Add the status name and the count to a new object
@@ -121,9 +118,40 @@ const showStats = async (req, res) => {
   };
 
   // Monthly applications
-  let monthlyApplication = [];
+  let monthlyApplication = await EmployeeModel.aggregate([
+    // Stage 1: Get all employees added by all admins
+    {
+      $match: {},
+    },
+    // Stage 2: Group based on year and month
+    {
+      $group: {
+        _id: { year: { $year: "$createdAt" }, month: { $month: "$createdAt" } },
+        count: { $sum: 1 },
+      },
+    },
+    // Sort by descending year and month
+    { $sort: { "_id.year": -1, "_id.month": -1 } },
+    // Limit to last six months
+    { $limit: 12 },
+  ]);
+  // Format the date to year and month and return it
+  monthlyApplication = monthlyApplication
+    .map((item) => {
+      const {
+        _id: { year, month },
+        count,
+      } = item;
+      const date = moment()
+        .month(month - 1)
+        .year(year)
+        .format("MMM Y");
 
-  res.status(StatusCodes.OK).json({ monthlyApplication,employeesStats });
+      return { date, count };
+    })
+    .reverse();
+
+  res.status(StatusCodes.OK).json({ monthlyApplication, employeesStats });
 };
 
 module.exports = {
