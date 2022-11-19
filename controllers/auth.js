@@ -37,7 +37,12 @@ const loginUser = async (req, res) => {
 
   res
     .status(StatusCodes.OK)
-    .json({ userName: user.name, isAdmin: user.isAdmin, token });
+    .json({
+      userName: user.name,
+      avatarUrl: user.avatarUrl,
+      isAdmin: user.isAdmin,
+      token,
+    });
 };
 
 /*
@@ -68,8 +73,6 @@ const deleteUser = async (req, res) => {
   const userId = mongoose.Types.ObjectId(id);
 
   const deletedUser = await User.findOneAndDelete({ _id: userId });
-
-  console.log("DELETED USER: ", deletedUser);
 
   if (!deletedUser) {
     throw new NotFoundError(
