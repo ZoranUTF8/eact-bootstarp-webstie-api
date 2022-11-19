@@ -29,8 +29,12 @@ const UserSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  avatarUrl: {
+    type: String,
+    default: "NoAvatar",
+  },
 });
-
+// Before saving the new user to the db use bcrypt on the the password and create a hash
 UserSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);

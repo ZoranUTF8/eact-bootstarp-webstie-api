@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("express-async-errors");
+
 // Swagger API
 const swaggerUi = require("swagger-ui-express");
 const YAML = require("yamljs");
@@ -8,7 +9,7 @@ const swaggerDocument = YAML.load("./swagger.yaml");
 const express = require("express");
 const app = express();
 
-// Secuirty packages
+// Security packages
 const helmet = require("helmet");
 const cors = require("cors");
 const xss = require("xss-clean");
@@ -23,8 +24,7 @@ const employeesRouter = require("./routes/employees");
 const authenticationMiddleware = require("./middleware/authentication");
 // express.json need to be above routes
 app.use(express.json());
-
-//
+// Security
 app.set("trust proxy", 1);
 app.use(
   rateLimiter({

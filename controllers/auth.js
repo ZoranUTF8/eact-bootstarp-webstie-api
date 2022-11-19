@@ -47,15 +47,19 @@ where the validation is done by mongo
 const registerUser = async (req, res) => {
   //? Add isAdmin properties and set to false when we register a news user
   const newUser = { ...req.body, isAdmin: false };
-
+  //  Add user to the db after the isAdmin has been added as default false
   const createdUser = await User.create(newUser);
   // generate and return a jwt token inside the user model as an instance method
   const token = await createdUser.generateToken();
 
-  res
-    .status(StatusCodes.CREATED)
-    .json({ userName: createdUser.name, isAdmin: createdUser.isAdmin, token });
+  res.status(StatusCodes.CREATED).json({
+    userName: createdUser.name,
+    avatarUrl: createdUser.avatarUrl,
+    isAdmin: createdUser.isAdmin,
+    token,
+  });
 };
+
 /*
 Delete a user from the database
 */
