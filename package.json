@@ -4,6 +4,7 @@
   "description": "react bootstrap website RESTapi",
   "main": "index.js",
   "scripts": {
+    "setup": "npm install",
     "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
