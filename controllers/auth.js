@@ -35,14 +35,12 @@ const loginUser = async (req, res) => {
   // If the user has the correct password then return the user data with a new jwt token
   const token = await user.generateToken();
 
-  res
-    .status(StatusCodes.OK)
-    .json({
-      userName: user.name,
-      avatarUrl: user.avatarUrl,
-      isAdmin: user.isAdmin,
-      token,
-    });
+  res.status(StatusCodes.OK).json({
+    userName: user.name,
+    avatarUrl: user.avatarUrl,
+    isAdmin: user.isAdmin,
+    token,
+  });
 };
 
 /*
@@ -69,20 +67,17 @@ const registerUser = async (req, res) => {
 Delete a user from the database
 */
 const deleteUser = async (req, res) => {
-  const { id } = req.params;
-  const userId = mongoose.Types.ObjectId(id);
+  const { userName } = req.body;
 
-  const deletedUser = await User.findOneAndDelete({ _id: userId });
+  const deletedUser = await User.findOneAndDelete({ name: userName });
 
   if (!deletedUser) {
     throw new NotFoundError(
-      `No employee found with id: ${userId}. Please check your input.`
+      `No employee found with the provided username: ${userName}. Please check your input.`
     );
   }
 
-  res
-    .status(StatusCodes.OK)
-    .json({ userId: deletedUser._id, userName: deletedUser.name });
+  res.status(StatusCodes.OK).json({ userName: deletedUser.name });
 };
 
 module.exports = { loginUser, registerUser, deleteUser };
