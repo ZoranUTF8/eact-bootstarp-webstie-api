@@ -79,7 +79,7 @@ const updateEmployee = async (req, res) => {
     payload,
     { new: true, runValidators: true }
   );
-
+  
   if (!updatedEmployee) {
     throw new BadRequestError(`No employee found with id ${employeeId}`);
   }

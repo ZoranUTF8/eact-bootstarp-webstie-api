@@ -1,5 +1,4 @@
 const User = require("../models/User");
-const mongoose = require("mongoose");
 const { StatusCodes } = require("http-status-codes");
 const {
   BadRequestError,
@@ -9,6 +8,9 @@ const {
 
 // Route controllers
 
+/*
+Login and existing user
+*/
 const loginUser = async (req, res) => {
   // Get the user email and password from the login page
   const { email, password } = req.body;
@@ -64,6 +66,37 @@ const registerUser = async (req, res) => {
 };
 
 /*
+Update an existing user
+*/
+const updateUser = async (req, res) => {
+  const {
+    body: { userName: name, email, avatarUrl, password },
+  } = req;
+
+  const updatedUser = await User.findOneAndUpdate(
+    {
+      name: name,
+    },
+    { name, email, avatarUrl, password },
+    { new: true, runValidators: true }
+  );
+  
+  if (!updatedUser) {
+    throw new BadRequestError(`No user found with username ${name}`);
+  }
+
+  // generate and return a jwt token inside the user model as an instance method
+  const token = await updatedUser.generateToken();
+
+  res.status(StatusCodes.CREATED).json({
+    userName: updatedUser.name,
+    avatarUrl: updatedUser.avatarUrl,
+    isAdmin: updatedUser.isAdmin,
+    token,
+  });
+};
+
+/*
 Delete a user from the database
 */
 const deleteUser = async (req, res) => {
@@ -80,4 +113,4 @@ const deleteUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ userName: deletedUser.name });
 };
 
-module.exports = { loginUser, registerUser, deleteUser };
+module.exports = { loginUser, registerUser, deleteUser, updateUser };

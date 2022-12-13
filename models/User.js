@@ -41,6 +41,13 @@ UserSchema.pre("save", async function (next) {
   next();
 });
 
+UserSchema.pre("findOneAndUpdate", async function (next) {
+  const data = this.getUpdate();
+  const salt = await bcrypt.genSalt(10);
+  data.password = await bcrypt.hash(data.password, salt);
+  next();
+});
+
 // Schema instance methods
 
 // Generate a new JWT token when the user registers
