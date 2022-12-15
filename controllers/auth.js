@@ -80,7 +80,7 @@ const updateUser = async (req, res) => {
     { name, email, avatarUrl, password },
     { new: true, runValidators: true }
   );
-  
+
   if (!updatedUser) {
     throw new BadRequestError(`No user found with username ${name}`);
   }
